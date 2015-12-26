@@ -58,32 +58,50 @@ public class Assets implements Disposable, AssetErrorListener
         // Add an AtlasRegion to hold the standing-right sprite
         public TextureAtlas.AtlasRegion standingRight;
         public TextureAtlas.AtlasRegion standingLeft;
+        public TextureAtlas.AtlasRegion jumpingRight;
+        public TextureAtlas.AtlasRegion jumpingLeft;
+
+        public TextureAtlas.AtlasRegion walk2Right;
+        public TextureAtlas.AtlasRegion walk2Left;
 
         public GigaGalAssets(TextureAtlas atlas)
         {
             // Use atlas.findRegion() to initialize the standing right AtlasRegion
             TextureRegion standingRightRegion = atlas.findRegion(Constants.GIGAGAL_STANDING_RIGHT);
-
-            standingRight = new TextureAtlas.AtlasRegion(
-                    standingRightRegion.getTexture(),
-                    standingRightRegion.getRegionX(),
-                    standingRightRegion.getRegionY(),
-                    standingRightRegion.getRegionWidth(),
-                    standingRightRegion.getRegionHeight()
-            );
+            standingRight = makeAtlasRegion(standingRightRegion);
 
             // Use atlas.findRegion() to initialize the standing left AtlasRegion
             TextureRegion standingLeftRegion = atlas.findRegion(Constants.GIGAGAL_STANDING_LEFT);
+            standingLeft = makeAtlasRegion(standingLeftRegion);
 
-            standingLeft = new TextureAtlas.AtlasRegion(
-                    standingLeftRegion.getTexture(),
-                    standingLeftRegion.getRegionX(),
-                    standingLeftRegion.getRegionY(),
-                    standingLeftRegion.getRegionWidth(),
-                    standingLeftRegion.getRegionHeight()
-            );
+            // Use atlas.findRegion() to initialize the standing right AtlasRegion
+            TextureRegion jumpingRightRegion = atlas.findRegion(Constants.GIGAGAL_JUMPING_RIGHT);
+            jumpingRight = makeAtlasRegion(jumpingRightRegion);
+
+            // Use atlas.findRegion() to initialize the standing left AtlasRegion
+            TextureRegion jumpingLeftRegion = atlas.findRegion(Constants.GIGAGAL_JUMPING_LEFT);
+            jumpingLeft = makeAtlasRegion(jumpingLeftRegion);
+
+            // Use atlas.findRegion() to initialize the standing right AtlasRegion
+            TextureRegion walk2RightRegion = atlas.findRegion(Constants.GIGAGAL_WALK_2_RIGHT);
+            walk2Right = makeAtlasRegion(walk2RightRegion);
+
+            // Use atlas.findRegion() to initialize the standing left AtlasRegion
+            TextureRegion walk2LeftRegion = atlas.findRegion(Constants.GIGAGAL_WALK_2_LEFT);
+            walk2Left = makeAtlasRegion(walk2LeftRegion);
 
         }
 
+    }
+
+    private TextureAtlas.AtlasRegion makeAtlasRegion(TextureRegion textureRegion)
+    {
+        return new TextureAtlas.AtlasRegion(
+                textureRegion.getTexture(),
+                textureRegion.getRegionX(),
+                textureRegion.getRegionY(),
+                textureRegion.getRegionWidth(),
+                textureRegion.getRegionHeight()
+        );
     }
 }

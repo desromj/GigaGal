@@ -20,9 +20,14 @@ public class Constants
 
     public static final String TEXTURE_ATLAS = "images/gigagal.pack.atlas";
 
-    // Add a constant for the name of the standing-right sprite
+    // GigaGal Sprite file names
     public static final String GIGAGAL_STANDING_RIGHT = "standing-right";
     public static final String GIGAGAL_STANDING_LEFT = "standing-left";
+    public static final String GIGAGAL_JUMPING_RIGHT = "jumping-right";
+    public static final String GIGAGAL_JUMPING_LEFT = "jumping-left";
+
+    public static final String GIGAGAL_WALK_2_RIGHT = "walk-2-right";
+    public static final String GIGAGAL_WALK_2_LEFT = "walk-2-left";
 
     // Define a Vector2 Constant for GigaGal's eye position within her sprites (12, 24)
     public static final Vector2 GIGAGAL_EYE_POSITION = new Vector2(12, 24);

@@ -25,6 +25,7 @@ public class GigaGal
 
     // Add a JumpState
     JumpState jumpState;
+    WalkState walkState;
 
     // Add a long for jumpStartTime
     Long jumpStartTime;
@@ -35,6 +36,7 @@ public class GigaGal
 
         velocity = new Vector2();
         jumpState = JumpState.FALLING;
+        walkState = WalkState.STANDING;
     }
 
     public void update(float delta) {
@@ -51,7 +53,7 @@ public class GigaGal
         if (jumpState != JumpState.JUMPING)
             jumpState = JumpState.FALLING;
 
-        // TODO: Check if GigaGal has landed on the ground
+        // Check if GigaGal has landed on the ground
         // Remember that position keeps track of GigaGal's eye position, not her feet.
         // If she has indeed landed, change her jumpState to GROUNDED, set her vertical velocity to 0,
         // and make sure her feet aren't sticking into the floor.
@@ -87,19 +89,22 @@ public class GigaGal
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             moveLeft(delta);
-
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+        else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
             moveRight(delta);
+        else
+            walkState = WalkState.STANDING;
     }
 
     private void moveLeft(float delta) {
         this.position.add(-Constants.GIGAGAL_MOVEMENT_SPEED * delta, 0);
         facing = Facing.LEFT;
+        walkState = WalkState.WALKING;
     }
 
     private void moveRight(float delta) {
         this.position.add(Constants.GIGAGAL_MOVEMENT_SPEED * delta, 0);
         facing = Facing.RIGHT;
+        walkState = WalkState.WALKING;
     }
 
     private void startJump() {
@@ -141,12 +146,33 @@ public class GigaGal
         switch (this.facing)
         {
             case LEFT:
-                atlasRegion = Assets.instance.gigaGalAssets.standingLeft;
+
+                if (jumpState == JumpState.GROUNDED) {
+
+                    if (walkState == WalkState.STANDING)
+                        atlasRegion = Assets.instance.gigaGalAssets.standingLeft;
+                    else
+                        atlasRegion = Assets.instance.gigaGalAssets.walk2Left;
+
+                } else {
+                    atlasRegion = Assets.instance.gigaGalAssets.jumpingLeft;
+                }
+
                 break;
 
             case RIGHT:
             default:
-                atlasRegion = Assets.instance.gigaGalAssets.standingRight;
+
+                if (jumpState == JumpState.GROUNDED) {
+                    if (walkState == WalkState.STANDING)
+                        atlasRegion = Assets.instance.gigaGalAssets.standingRight;
+                    else
+                        atlasRegion = Assets.instance.gigaGalAssets.walk2Right;
+
+                } else {
+                    atlasRegion = Assets.instance.gigaGalAssets.jumpingRight;
+                }
+
                 break;
         }
 
@@ -186,4 +212,9 @@ public class GigaGal
         LEFT
     }
 
+    public enum WalkState
+    {
+        STANDING,
+        WALKING;
+    }
 }
