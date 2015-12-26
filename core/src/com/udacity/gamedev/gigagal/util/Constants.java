@@ -31,5 +31,9 @@ public class Constants
     public static final float GIGAGAL_EYE_HEIGHT = 16.0f;
 
     // Add a constant for GigaGal's movement speed
-    public static float GIGAGAL_MOVEMENT_SPEED = 75.0f;
+    public static final float GIGAGAL_MOVEMENT_SPEED = 75.0f;
+    public static final float GIGAGAL_JUMP_SPEED = 250.0f;
+    public static final float GIGAGAL_MAX_JUMP_DURATION = 0.15f;
+
+    public static final float ACCELERATION_DUE_TO_GRAVITY = 1000.0f;
 }

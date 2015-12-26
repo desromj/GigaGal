@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.udacity.gamedev.gigagal.util.Assets;
 import com.udacity.gamedev.gigagal.util.Constants;
 
@@ -15,21 +17,74 @@ public class GigaGal
 {
     public final static String TAG = GigaGal.class.getName();
 
-    public enum Facing
-    {
-        RIGHT,
-        LEFT
-    }
-
     Vector2 position;
     Facing facing;
+
+    // Add a Vector2 for GigaGal's velocity
+    Vector2 velocity;
+
+    // Add a JumpState
+    JumpState jumpState;
+
+    // Add a long for jumpStartTime
+    Long jumpStartTime;
 
     public GigaGal() {
         position = new Vector2(Constants.GIGAGAL_EYE_HEIGHT, Constants.GIGAGAL_EYE_HEIGHT);
         facing = Facing.RIGHT;
+
+        velocity = new Vector2();
+        jumpState = JumpState.FALLING;
     }
 
     public void update(float delta) {
+
+        // Accelerate GigaGal down
+        // Multiple delta by the acceleration due to gravity and subtract it from GG's vertical velocity
+        velocity.sub(0, delta * Constants.ACCELERATION_DUE_TO_GRAVITY);
+
+        // Apply GigaGal's velocity to her position
+        // Vector2.mulAdd() is very convenient.
+        position.mulAdd(velocity, delta);
+
+        // If GigaGal isn't JUMPING, make her now FALLING
+        if (jumpState != JumpState.JUMPING)
+            jumpState = JumpState.FALLING;
+
+        // TODO: Check if GigaGal has landed on the ground
+        // Remember that position keeps track of GigaGal's eye position, not her feet.
+        // If she has indeed landed, change her jumpState to GROUNDED, set her vertical velocity to 0,
+        // and make sure her feet aren't sticking into the floor.
+        if (position.y <= Constants.GIGAGAL_EYE_HEIGHT)
+        {
+            jumpState = JumpState.GROUNDED;
+            velocity.y = 0.0f;
+            position.y = Constants.GIGAGAL_EYE_HEIGHT;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
+            // Handle jump key
+            // Add a switch statement. If the jump key is pressed and GG is GROUNDED, then startJump()
+            // If she's JUMPING, then continueJump()
+            // If she's falling, then don't do anything
+            switch (jumpState)
+            {
+                case GROUNDED:
+                    startJump();
+                    break;
+                case JUMPING:
+                    continueJump();
+                    break;
+                case FALLING:
+                default:
+                    break;
+            }
+
+        } else {
+            // If the jump key wasn't pressed, endJump()
+            endJump();
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             moveLeft(delta);
 
@@ -45,6 +100,38 @@ public class GigaGal
     private void moveRight(float delta) {
         this.position.add(Constants.GIGAGAL_MOVEMENT_SPEED * delta, 0);
         facing = Facing.RIGHT;
+    }
+
+    private void startJump() {
+        // Set jumpState to JUMPING
+        jumpState = JumpState.JUMPING;
+        // Set the jump start time
+        // Using TimeUtils.nanoTime()
+        jumpStartTime = TimeUtils.nanoTime();
+        // Call continueJump()
+        continueJump();
+    }
+
+    private void continueJump() {
+        // First, check if we're JUMPING, if not, just return
+        if (jumpState != JumpState.JUMPING)
+            return;
+
+        // Find out how long we've been jumping
+        float jumpingFor = MathUtils.nanoToSec * (TimeUtils.nanoTime() - jumpStartTime);
+
+        // If we have been jumping for less than the max jump duration, set GG's vertical speed to the jump speed constant
+        // Else, call endJump()
+        if (jumpingFor < Constants.GIGAGAL_MAX_JUMP_DURATION)
+            velocity.y = Constants.GIGAGAL_JUMP_SPEED;
+        else
+            endJump();
+    }
+
+    private void endJump() {
+        // If we're JUMPING, now we're FALLING
+        if (jumpState == JumpState.JUMPING)
+            jumpState = JumpState.FALLING;
     }
 
     public void render(SpriteBatch batch) {
@@ -84,4 +171,19 @@ public class GigaGal
 
 
     }
+
+    // Do this first! Add a JumpState enum containing JUMPING, FALLING, and GROUNDED
+    public enum JumpState
+    {
+        JUMPING,
+        FALLING,
+        GROUNDED
+    }
+
+    public enum Facing
+    {
+        RIGHT,
+        LEFT
+    }
+
 }
