@@ -5,8 +5,10 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.sun.media.jfxmediaimpl.MediaDisposer.Disposable;
 
 /**
@@ -60,9 +62,11 @@ public class Assets implements Disposable, AssetErrorListener
         public TextureAtlas.AtlasRegion standingLeft;
         public TextureAtlas.AtlasRegion jumpingRight;
         public TextureAtlas.AtlasRegion jumpingLeft;
+        // public TextureAtlas.AtlasRegion walk2Right;
+        // public TextureAtlas.AtlasRegion walk2Left;
 
-        public TextureAtlas.AtlasRegion walk2Right;
-        public TextureAtlas.AtlasRegion walk2Left;
+        public Animation walkingRight;
+        public Animation walkingLeft;
 
         public GigaGalAssets(TextureAtlas atlas)
         {
@@ -82,6 +86,27 @@ public class Assets implements Disposable, AssetErrorListener
             TextureRegion jumpingLeftRegion = atlas.findRegion(Constants.GIGAGAL_JUMPING_LEFT);
             jumpingLeft = makeAtlasRegion(jumpingLeftRegion);
 
+            Array<TextureAtlas.AtlasRegion> walkingRightFrames = new Array<TextureAtlas.AtlasRegion>();
+            walkingRightFrames.add(makeAtlasRegion(atlas.findRegion(Constants.GIGAGAL_WALK_1_RIGHT)));
+            walkingRightFrames.add(makeAtlasRegion(atlas.findRegion(Constants.GIGAGAL_WALK_2_RIGHT)));
+            walkingRightFrames.add(makeAtlasRegion(atlas.findRegion(Constants.GIGAGAL_WALK_3_RIGHT)));
+
+            walkingRight = new Animation(
+                    Constants.GIGAGAL_WALK_LOOP_DURATION,
+                    walkingRightFrames,
+                    Animation.PlayMode.LOOP_PINGPONG);
+
+            Array<TextureAtlas.AtlasRegion> walkingLeftFrames = new Array<TextureAtlas.AtlasRegion>();
+            walkingLeftFrames.add(makeAtlasRegion(atlas.findRegion(Constants.GIGAGAL_WALK_1_LEFT)));
+            walkingLeftFrames.add(makeAtlasRegion(atlas.findRegion(Constants.GIGAGAL_WALK_2_LEFT)));
+            walkingLeftFrames.add(makeAtlasRegion(atlas.findRegion(Constants.GIGAGAL_WALK_3_LEFT)));
+
+            walkingLeft = new Animation(
+                    Constants.GIGAGAL_WALK_LOOP_DURATION,
+                    walkingLeftFrames,
+                    Animation.PlayMode.LOOP_PINGPONG);
+
+            /*
             // Use atlas.findRegion() to initialize the standing right AtlasRegion
             TextureRegion walk2RightRegion = atlas.findRegion(Constants.GIGAGAL_WALK_2_RIGHT);
             walk2Right = makeAtlasRegion(walk2RightRegion);
@@ -89,12 +114,12 @@ public class Assets implements Disposable, AssetErrorListener
             // Use atlas.findRegion() to initialize the standing left AtlasRegion
             TextureRegion walk2LeftRegion = atlas.findRegion(Constants.GIGAGAL_WALK_2_LEFT);
             walk2Left = makeAtlasRegion(walk2LeftRegion);
-
+            */
         }
 
     }
 
-    private TextureAtlas.AtlasRegion makeAtlasRegion(TextureRegion textureRegion)
+    public TextureAtlas.AtlasRegion makeAtlasRegion(TextureRegion textureRegion)
     {
         return new TextureAtlas.AtlasRegion(
                 textureRegion.getTexture(),

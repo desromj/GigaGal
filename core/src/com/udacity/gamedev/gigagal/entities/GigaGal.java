@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -29,6 +30,7 @@ public class GigaGal
 
     // Add a long for jumpStartTime
     Long jumpStartTime;
+    Long walkStartTime;
 
     public GigaGal() {
         position = new Vector2(Constants.GIGAGAL_EYE_HEIGHT, Constants.GIGAGAL_EYE_HEIGHT);
@@ -96,12 +98,18 @@ public class GigaGal
     }
 
     private void moveLeft(float delta) {
+        if (jumpState == JumpState.GROUNDED && walkState != WalkState.WALKING)
+            walkStartTime = TimeUtils.nanoTime();
+
         this.position.add(-Constants.GIGAGAL_MOVEMENT_SPEED * delta, 0);
         facing = Facing.LEFT;
         walkState = WalkState.WALKING;
     }
 
     private void moveRight(float delta) {
+        if (jumpState == JumpState.GROUNDED && walkState != WalkState.WALKING)
+            walkStartTime = TimeUtils.nanoTime();
+
         this.position.add(Constants.GIGAGAL_MOVEMENT_SPEED * delta, 0);
         facing = Facing.RIGHT;
         walkState = WalkState.WALKING;
@@ -141,7 +149,7 @@ public class GigaGal
 
     public void render(SpriteBatch batch) {
 
-        TextureAtlas.AtlasRegion atlasRegion;
+        TextureRegion atlasRegion;
 
         switch (this.facing)
         {
@@ -149,10 +157,12 @@ public class GigaGal
 
                 if (jumpState == JumpState.GROUNDED) {
 
-                    if (walkState == WalkState.STANDING)
+                    if (walkState == WalkState.STANDING) {
                         atlasRegion = Assets.instance.gigaGalAssets.standingLeft;
-                    else
-                        atlasRegion = Assets.instance.gigaGalAssets.walk2Left;
+                    } else {
+                        float walkingTime = MathUtils.nanoToSec * (TimeUtils.nanoTime() - walkStartTime);
+                        atlasRegion = Assets.instance.gigaGalAssets.walkingLeft.getKeyFrame(walkingTime, true);
+                    }
 
                 } else {
                     atlasRegion = Assets.instance.gigaGalAssets.jumpingLeft;
@@ -164,10 +174,12 @@ public class GigaGal
             default:
 
                 if (jumpState == JumpState.GROUNDED) {
-                    if (walkState == WalkState.STANDING)
+                    if (walkState == WalkState.STANDING) {
                         atlasRegion = Assets.instance.gigaGalAssets.standingRight;
-                    else
-                        atlasRegion = Assets.instance.gigaGalAssets.walk2Right;
+                    } else {
+                        float walkingTime = MathUtils.nanoToSec * (TimeUtils.nanoTime() - walkStartTime);
+                        atlasRegion = Assets.instance.gigaGalAssets.walkingRight.getKeyFrame(walkingTime, true);
+                    }
 
                 } else {
                     atlasRegion = Assets.instance.gigaGalAssets.jumpingRight;

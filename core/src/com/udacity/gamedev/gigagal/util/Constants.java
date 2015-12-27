@@ -26,8 +26,14 @@ public class Constants
     public static final String GIGAGAL_JUMPING_RIGHT = "jumping-right";
     public static final String GIGAGAL_JUMPING_LEFT = "jumping-left";
 
+    public static final String GIGAGAL_WALK_1_RIGHT = "walk-1-right";
+    public static final String GIGAGAL_WALK_1_LEFT = "walk-1-left";
     public static final String GIGAGAL_WALK_2_RIGHT = "walk-2-right";
     public static final String GIGAGAL_WALK_2_LEFT = "walk-2-left";
+    public static final String GIGAGAL_WALK_3_RIGHT = "walk-3-right";
+    public static final String GIGAGAL_WALK_3_LEFT = "walk-3-left";
+
+    public static final float GIGAGAL_WALK_LOOP_DURATION = 0.25f;
 
     // Define a Vector2 Constant for GigaGal's eye position within her sprites (12, 24)
     public static final Vector2 GIGAGAL_EYE_POSITION = new Vector2(12, 24);
