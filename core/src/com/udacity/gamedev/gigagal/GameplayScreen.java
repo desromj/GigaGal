@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.udacity.gamedev.gigagal.util.Assets;
 import com.udacity.gamedev.gigagal.util.Constants;
@@ -17,6 +18,7 @@ public class GameplayScreen extends ScreenAdapter
     public static final String TAG = GameplayScreen.class.getName();
 
     SpriteBatch spriteBatch;
+    ShapeRenderer renderer;
     ExtendViewport viewport;
 
     Level level;
@@ -25,6 +27,7 @@ public class GameplayScreen extends ScreenAdapter
     public void show() {
         Assets.instance.init();
         spriteBatch = new SpriteBatch();
+        renderer = new ShapeRenderer();
         viewport = new ExtendViewport(Constants.WORLD_SIZE, Constants.WORLD_SIZE);
         level = new Level();
     }
@@ -38,6 +41,7 @@ public class GameplayScreen extends ScreenAdapter
     public void dispose() {
         Assets.instance.dispose();
         spriteBatch.dispose();
+        renderer.dispose();
     }
 
     @Override
@@ -53,13 +57,8 @@ public class GameplayScreen extends ScreenAdapter
 
         // Set the SpriteBatch's projection matrix
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+        renderer.setProjectionMatrix(viewport.getCamera().combined);
 
-        // Begin the SpriteBatch
-        spriteBatch.begin();
-
-        level.render(spriteBatch);
-
-        // End the SpriteBatch
-        spriteBatch.end();
+        level.render(spriteBatch, renderer);
     }
 }

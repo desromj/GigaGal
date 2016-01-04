@@ -1,7 +1,33 @@
 package com.udacity.gamedev.gigagal.entities;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
 /**
  * Created by Quiv on 2015-12-22.
  */
-public class Platform {
+public class Platform
+{
+    float
+        left,
+        right,
+        top,
+        bottom;
+
+    public Platform(float left, float top, float width, float height)
+    {
+        this.left = left;
+        this.top = top;
+        this.right = left + width;
+        this.bottom = top - height;
+    }
+
+    public void render(ShapeRenderer renderer)
+    {
+        float width = right - left;
+        float height = top - bottom;
+
+        renderer.setColor(Color.BLUE);
+        renderer.rect(left, bottom, width, height);
+    }
 }
