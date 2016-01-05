@@ -33,6 +33,9 @@ public class Constants
     public static final String GIGAGAL_WALK_3_RIGHT = "walk-3-right";
     public static final String GIGAGAL_WALK_3_LEFT = "walk-3-left";
 
+    public static final String PLATFORM_SPRITE = "platform";
+    public static final int PLATFORM_EDGE = 8;
+
     public static final float GIGAGAL_WALK_LOOP_DURATION = 0.25f;
 
     // Define a Vector2 Constant for GigaGal's eye position within her sprites (12, 24)

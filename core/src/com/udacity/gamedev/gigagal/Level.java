@@ -18,7 +18,7 @@ public class Level
     {
         gigaGal = new GigaGal();
         platforms = new Array<Platform>();
-        platforms.add(new Platform(70, 30, 20, 20));
+        platforms.add(new Platform(40, 40, 80, 20));
     }
 
     public void update(float delta) {
@@ -27,15 +27,13 @@ public class Level
 
     public void render(SpriteBatch batch, ShapeRenderer renderer)
     {
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        batch.begin();
 
         for (Platform platform: platforms)
-            platform.render(renderer);
+            platform.render(batch);
 
-        renderer.end();
-
-        batch.begin();
         gigaGal.render(batch);
+
         batch.end();
     }
 

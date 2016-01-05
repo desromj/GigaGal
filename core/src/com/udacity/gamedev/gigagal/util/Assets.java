@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -30,6 +31,7 @@ public class Assets implements Disposable, AssetErrorListener
     public static final Assets instance = new Assets();
 
     public GigaGalAssets gigaGalAssets;
+    public PlatformAssets platformAssets;
     private AssetManager assetManager;
 
     private Assets() { }
@@ -42,6 +44,7 @@ public class Assets implements Disposable, AssetErrorListener
 
         TextureAtlas atlas = assetManager.get(Constants.TEXTURE_ATLAS);
         gigaGalAssets = new GigaGalAssets(atlas);
+        platformAssets = new PlatformAssets(atlas);
     }
 
     @Override
@@ -53,6 +56,18 @@ public class Assets implements Disposable, AssetErrorListener
     @Override
     public void dispose() {
         assetManager.dispose();
+    }
+
+    public class PlatformAssets
+    {
+        public NinePatch platformNinePatch;
+
+        public PlatformAssets(TextureAtlas atlas)
+        {
+            TextureAtlas.AtlasRegion region = atlas.findRegion(Constants.PLATFORM_SPRITE);
+            int edge = Constants.PLATFORM_EDGE;
+            platformNinePatch = new NinePatch(region, edge, edge, edge, edge);
+        }
     }
 
     public class GigaGalAssets
