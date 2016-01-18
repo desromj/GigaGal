@@ -18,11 +18,15 @@ public class Level
     {
         gigaGal = new GigaGal();
         platforms = new Array<Platform>();
-        platforms.add(new Platform(40, 40, 80, 20));
+        platforms.add(new Platform(10, 30, 80, 20));
+        platforms.add(new Platform(40, 50, 20, 40));
+        platforms.add(new Platform(110, 80, 60, 40));
+        platforms.add(new Platform(10, 80, 30, 20));
     }
 
-    public void update(float delta) {
-        gigaGal.update(delta);
+    public void update(float delta)
+    {
+        gigaGal.update(delta, platforms);
     }
 
     public void render(SpriteBatch batch, ShapeRenderer renderer)

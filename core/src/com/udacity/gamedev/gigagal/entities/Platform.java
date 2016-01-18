@@ -31,10 +31,10 @@ public class Platform
 
         Assets.instance.platformAssets.platformNinePatch.draw(
                 batch,
-                left,
-                bottom,
-                width,
-                height
+                left - 1,
+                bottom - 1,
+                width + 2,
+                height + 2
         );
     }
 }

@@ -39,15 +39,16 @@ public class Constants
     public static final float GIGAGAL_WALK_LOOP_DURATION = 0.25f;
 
     // Define a Vector2 Constant for GigaGal's eye position within her sprites (12, 24)
-    public static final Vector2 GIGAGAL_EYE_POSITION = new Vector2(12, 24);
-
+    public static final Vector2 GIGAGAL_EYE_POSITION = new Vector2(16, 24);
     // Define a float constant for the height of GigaGal's eye above her feet (16)
     public static final float GIGAGAL_EYE_HEIGHT = 16.0f;
 
-    // Add a constant for GigaGal's movement speed
-    public static final float GIGAGAL_MOVEMENT_SPEED = 75.0f;
-    public static final float GIGAGAL_JUMP_SPEED = 250.0f;
-    public static final float GIGAGAL_MAX_JUMP_DURATION = 0.15f;
+    public static final float GIGAGAL_STANCE_WIDTH = 21.0f;
 
-    public static final float ACCELERATION_DUE_TO_GRAVITY = 1000.0f;
+    // Add a constant for GigaGal's movement speed
+    public static final float GIGAGAL_MOVEMENT_SPEED = WORLD_SIZE / 2;
+    public static final float GIGAGAL_JUMP_SPEED = WORLD_SIZE * 1.5f;
+    public static final float GIGAGAL_MAX_JUMP_DURATION = 0.1f;
+
+    public static final float ACCELERATION_DUE_TO_GRAVITY = WORLD_SIZE / 2 * 9.81f;
 }

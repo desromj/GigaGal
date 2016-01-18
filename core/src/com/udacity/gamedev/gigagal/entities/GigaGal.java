@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.udacity.gamedev.gigagal.util.Assets;
 import com.udacity.gamedev.gigagal.util.Constants;
@@ -18,7 +19,7 @@ public class GigaGal
 {
     public final static String TAG = GigaGal.class.getName();
 
-    Vector2 position;
+    Vector2 position, lastFramePosition;
     Facing facing;
 
     // Add a Vector2 for GigaGal's velocity
@@ -34,14 +35,17 @@ public class GigaGal
 
     public GigaGal() {
         position = new Vector2(Constants.GIGAGAL_EYE_HEIGHT, Constants.GIGAGAL_EYE_HEIGHT);
-        facing = Facing.RIGHT;
+        lastFramePosition = new Vector2(position.x, position.y);
 
+        facing = Facing.RIGHT;
         velocity = new Vector2();
         jumpState = JumpState.FALLING;
         walkState = WalkState.STANDING;
     }
 
-    public void update(float delta) {
+    public void update(float delta, Array<Platform> platforms) {
+
+        lastFramePosition.set(position.x, position.y);
 
         // Accelerate GigaGal down
         // Multiple delta by the acceleration due to gravity and subtract it from GG's vertical velocity
@@ -52,18 +56,27 @@ public class GigaGal
         position.mulAdd(velocity, delta);
 
         // If GigaGal isn't JUMPING, make her now FALLING
-        if (jumpState != JumpState.JUMPING)
+        if (jumpState != JumpState.JUMPING) {
             jumpState = JumpState.FALLING;
 
-        // Check if GigaGal has landed on the ground
-        // Remember that position keeps track of GigaGal's eye position, not her feet.
-        // If she has indeed landed, change her jumpState to GROUNDED, set her vertical velocity to 0,
-        // and make sure her feet aren't sticking into the floor.
-        if (position.y <= Constants.GIGAGAL_EYE_HEIGHT)
-        {
-            jumpState = JumpState.GROUNDED;
-            velocity.y = 0.0f;
-            position.y = Constants.GIGAGAL_EYE_HEIGHT;
+            // Check if GigaGal has landed on the ground
+            // Remember that position keeps track of GigaGal's eye position, not her feet.
+            // If she has indeed landed, change her jumpState to GROUNDED, set her vertical velocity to 0,
+            // and make sure her feet aren't sticking into the floor.
+            if (position.y - Constants.GIGAGAL_EYE_HEIGHT <= 0) {
+                jumpState = JumpState.GROUNDED;
+                velocity.y = 0.0f;
+                position.y = Constants.GIGAGAL_EYE_HEIGHT;
+            }
+
+            for (Platform platform: platforms)
+            {
+                if (landedOnPlatform(platform)) {
+                    jumpState = JumpState.GROUNDED;
+                    velocity.y = 0.0f;
+                    position.y = platform.top + Constants.GIGAGAL_EYE_HEIGHT;
+                }
+            }
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
@@ -95,6 +108,24 @@ public class GigaGal
             moveRight(delta);
         else
             walkState = WalkState.STANDING;
+    }
+
+    private boolean landedOnPlatform(Platform platform)
+    {
+        boolean leftFootIn = false, rightFootIn = false, straddle = false;
+
+        if (lastFramePosition.y - Constants.GIGAGAL_EYE_HEIGHT >= platform.top
+                && position.y - Constants.GIGAGAL_EYE_HEIGHT < platform.top) {
+
+            float leftFoot = position.x - Constants.GIGAGAL_STANCE_WIDTH / 2;
+            float rightFoot = position.x + Constants.GIGAGAL_STANCE_WIDTH / 2;
+
+            leftFootIn = (platform.left < leftFoot && platform.right > leftFoot);
+            rightFootIn = (platform.left < rightFoot && platform.right > rightFoot);
+            straddle = (platform.left > leftFoot && platform.right < rightFoot);
+        }
+
+        return leftFootIn || rightFootIn || straddle;
     }
 
     private void moveLeft(float delta) {
