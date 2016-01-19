@@ -51,4 +51,7 @@ public class Constants
     public static final float GIGAGAL_MAX_JUMP_DURATION = 0.1f;
 
     public static final float ACCELERATION_DUE_TO_GRAVITY = WORLD_SIZE / 2 * 9.81f;
+
+    public static final float KILL_PLANE_Y_HEIGHT = -120.0f;
+    public static final float DEBUG_CAMERA_MOVE_SPEED = GIGAGAL_MOVEMENT_SPEED * 3.0f;
 }

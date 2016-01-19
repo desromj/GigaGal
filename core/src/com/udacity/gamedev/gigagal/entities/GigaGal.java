@@ -59,16 +59,6 @@ public class GigaGal
         if (jumpState != JumpState.JUMPING) {
             jumpState = JumpState.FALLING;
 
-            // Check if GigaGal has landed on the ground
-            // Remember that position keeps track of GigaGal's eye position, not her feet.
-            // If she has indeed landed, change her jumpState to GROUNDED, set her vertical velocity to 0,
-            // and make sure her feet aren't sticking into the floor.
-            if (position.y - Constants.GIGAGAL_EYE_HEIGHT <= 0) {
-                jumpState = JumpState.GROUNDED;
-                velocity.y = 0.0f;
-                position.y = Constants.GIGAGAL_EYE_HEIGHT;
-            }
-
             for (Platform platform: platforms)
             {
                 if (landedOnPlatform(platform)) {
@@ -239,6 +229,17 @@ public class GigaGal
         );
 
 
+    }
+
+    public Vector2 getPosition()
+    {
+        return this.position;
+    }
+
+    public void setPosition(Vector2 newPos)
+    {
+        this.position.x = newPos.x;
+        this.position.y = newPos.y;
     }
 
     // Do this first! Add a JumpState enum containing JUMPING, FALLING, and GROUNDED
