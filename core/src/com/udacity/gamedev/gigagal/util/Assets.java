@@ -32,6 +32,8 @@ public class Assets implements Disposable, AssetErrorListener
 
     public GigaGalAssets gigaGalAssets;
     public PlatformAssets platformAssets;
+    public EnemyAssets enemyAssets;
+
     private AssetManager assetManager;
 
     private Assets() { }
@@ -43,8 +45,10 @@ public class Assets implements Disposable, AssetErrorListener
         assetManager.finishLoading();
 
         TextureAtlas atlas = assetManager.get(Constants.TEXTURE_ATLAS);
+
         gigaGalAssets = new GigaGalAssets(atlas);
         platformAssets = new PlatformAssets(atlas);
+        enemyAssets = new EnemyAssets(atlas);
     }
 
     @Override
@@ -67,6 +71,16 @@ public class Assets implements Disposable, AssetErrorListener
             TextureAtlas.AtlasRegion region = atlas.findRegion(Constants.PLATFORM_SPRITE);
             int edge = Constants.PLATFORM_EDGE;
             platformNinePatch = new NinePatch(region, edge, edge, edge, edge);
+        }
+    }
+
+    public class EnemyAssets
+    {
+        public TextureAtlas.AtlasRegion idle;
+
+        public EnemyAssets(TextureAtlas atlas)
+        {
+            this.idle = makeAtlasRegion(atlas.findRegion(Constants.ENEMY_IDLE));
         }
     }
 

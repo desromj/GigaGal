@@ -20,7 +20,9 @@ public class Constants
 
     public static final String TEXTURE_ATLAS = "images/gigagal.pack.atlas";
 
-    // GigaGal Sprite file names
+    /*
+     Texture Atlas file names
+      */
     public static final String GIGAGAL_STANDING_RIGHT = "standing-right";
     public static final String GIGAGAL_STANDING_LEFT = "standing-left";
     public static final String GIGAGAL_JUMPING_RIGHT = "jumping-right";
@@ -34,6 +36,12 @@ public class Constants
     public static final String GIGAGAL_WALK_3_LEFT = "walk-3-left";
 
     public static final String PLATFORM_SPRITE = "platform";
+
+    public static final String ENEMY_IDLE = "enemy";
+
+    /*
+     Done with texture atlasses
+     */
     public static final int PLATFORM_EDGE = 8;
 
     public static final float GIGAGAL_WALK_LOOP_DURATION = 0.25f;
@@ -49,6 +57,8 @@ public class Constants
     public static final float GIGAGAL_MOVEMENT_SPEED = WORLD_SIZE / 2;
     public static final float GIGAGAL_JUMP_SPEED = WORLD_SIZE * 1.5f;
     public static final float GIGAGAL_MAX_JUMP_DURATION = 0.1f;
+
+    public static final float ENEMY_PATROL_SPEED = WORLD_SIZE / 8.0f;
 
     public static final float ACCELERATION_DUE_TO_GRAVITY = WORLD_SIZE / 2 * 9.81f;
 
