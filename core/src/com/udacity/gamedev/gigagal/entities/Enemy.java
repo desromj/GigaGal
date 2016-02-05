@@ -2,7 +2,9 @@ package com.udacity.gamedev.gigagal.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.udacity.gamedev.gigagal.util.Assets;
 import com.udacity.gamedev.gigagal.util.Constants;
 
@@ -15,6 +17,8 @@ public class Enemy
     Vector2 position, velocity;
     PatrolDirection patrolDirection;
 
+    long startTime;
+
     public Enemy(Platform patrolPlatform)
     {
         this.patrolPlatform = patrolPlatform;
@@ -25,6 +29,7 @@ public class Enemy
                 patrolPlatform.top);
 
         this.velocity = new Vector2(Constants.ENEMY_PATROL_SPEED, 0.0f);
+        startTime = TimeUtils.nanoTime();
     }
 
     public void update(float delta)
@@ -39,6 +44,10 @@ public class Enemy
             velocity.x = -velocity.x;
             this.patrolDirection = PatrolDirection.LEFT;
         }
+
+        float elapsedTime = (TimeUtils.nanoTime() - startTime) * MathUtils.nanoToSec;
+        float bobScale = 1 + MathUtils.sin(MathUtils.PI2 * elapsedTime / Constants.ENEMY_BOB_PERIOD);
+        this.position.y = patrolPlatform.top + Constants.ENEMY_BOB_AMPLITUDE * bobScale;
     }
 
     public float getIdleSpriteWidth()

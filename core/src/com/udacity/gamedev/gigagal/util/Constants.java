@@ -59,6 +59,8 @@ public class Constants
     public static final float GIGAGAL_MAX_JUMP_DURATION = 0.1f;
 
     public static final float ENEMY_PATROL_SPEED = WORLD_SIZE / 8.0f;
+    public static final float ENEMY_BOB_PERIOD = 2.0f;
+    public static final float ENEMY_BOB_AMPLITUDE = 5.0f;
 
     public static final float ACCELERATION_DUE_TO_GRAVITY = WORLD_SIZE / 2 * 9.81f;
 
