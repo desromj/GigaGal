@@ -4,42 +4,35 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
-import com.sun.media.jfxmediaimpl.MediaDisposer.Disposable;
+import com.badlogic.gdx.utils.Disposable;
 
-/**
- * This utility class holds onto all the assets used in GigaGal. It's a singleton, so the
- * constructor is private, and a single instance is created when the class is loaded. That way all
- * the entities that make up GigaGal can access their sprites in the same place, and no work loading
- * up textures is repeated.
- *
- * Each entity gets its own inner class to hold its assets. Below you'll complete the GigaGalAssets
- * class by finding up the standing-right AtlasRegion within the TextureAtlas loaded in init() .
- */
 
-/**
- * Created by Quiv on 2015-12-22.
- */
-public class Assets implements Disposable, AssetErrorListener
-{
+public class Assets implements Disposable, AssetErrorListener {
+
     public static final String TAG = Assets.class.getName();
     public static final Assets instance = new Assets();
 
     public GigaGalAssets gigaGalAssets;
     public PlatformAssets platformAssets;
     public EnemyAssets enemyAssets;
+    public BulletAssets bulletAssets;
+    public PowerupAssets powerupAssets;
+    public ExplosionAssets explosionAssets;
 
     private AssetManager assetManager;
 
-    private Assets() { }
 
-    public void init() {
-        this.assetManager = new AssetManager();
+    private Assets() {
+    }
+
+    public void init(AssetManager assetManager) {
+        this.assetManager = assetManager;
         assetManager.setErrorListener(this);
         assetManager.load(Constants.TEXTURE_ATLAS, TextureAtlas.class);
         assetManager.finishLoading();
@@ -49,11 +42,13 @@ public class Assets implements Disposable, AssetErrorListener
         gigaGalAssets = new GigaGalAssets(atlas);
         platformAssets = new PlatformAssets(atlas);
         enemyAssets = new EnemyAssets(atlas);
+        bulletAssets = new BulletAssets(atlas);
+        powerupAssets = new PowerupAssets(atlas);
+        explosionAssets = new ExplosionAssets(atlas);
     }
 
     @Override
-    public void error(AssetDescriptor asset, Throwable throwable)
-    {
+    public void error(AssetDescriptor asset, Throwable throwable) {
         Gdx.app.error(TAG, "Couldn't load asset: " + asset.fileName, throwable);
     }
 
@@ -62,100 +57,91 @@ public class Assets implements Disposable, AssetErrorListener
         assetManager.dispose();
     }
 
-    public class PlatformAssets
-    {
-        public NinePatch platformNinePatch;
+    public class GigaGalAssets {
 
-        public PlatformAssets(TextureAtlas atlas)
-        {
-            TextureAtlas.AtlasRegion region = atlas.findRegion(Constants.PLATFORM_SPRITE);
+        public final AtlasRegion standingLeft;
+        public final AtlasRegion standingRight;
+        public final AtlasRegion walkingLeft;
+        public final AtlasRegion walkingRight;
+        public final AtlasRegion jumpingLeft;
+        public final AtlasRegion jumpingRight;
+
+        public final Animation walkingLeftAnimation;
+        public final Animation walkingRightAnimation;
+
+
+        public GigaGalAssets(TextureAtlas atlas) {
+            standingLeft = atlas.findRegion(Constants.STANDING_LEFT);
+            standingRight = atlas.findRegion(Constants.STANDING_RIGHT);
+            walkingLeft = atlas.findRegion(Constants.WALKING_LEFT_2);
+            walkingRight = atlas.findRegion(Constants.WALKING_RIGHT_2);
+
+            jumpingLeft = atlas.findRegion(Constants.JUMPING_LEFT);
+            jumpingRight = atlas.findRegion(Constants.JUMPING_RIGHT);
+
+            Array<AtlasRegion> walkingLeftFrames = new Array<AtlasRegion>();
+            walkingLeftFrames.add(atlas.findRegion(Constants.WALKING_LEFT_2));
+            walkingLeftFrames.add(atlas.findRegion(Constants.WALKING_LEFT_1));
+            walkingLeftFrames.add(atlas.findRegion(Constants.WALKING_LEFT_2));
+            walkingLeftFrames.add(atlas.findRegion(Constants.WALKING_LEFT_3));
+            walkingLeftAnimation = new Animation(Constants.WALK_LOOP_DURATION, walkingLeftFrames, PlayMode.LOOP);
+
+            Array<AtlasRegion> walkingRightFrames = new Array<AtlasRegion>();
+            walkingRightFrames.add(atlas.findRegion(Constants.WALKING_RIGHT_2));
+            walkingRightFrames.add(atlas.findRegion(Constants.WALKING_RIGHT_1));
+            walkingRightFrames.add(atlas.findRegion(Constants.WALKING_RIGHT_2));
+            walkingRightFrames.add(atlas.findRegion(Constants.WALKING_RIGHT_3));
+            walkingRightAnimation = new Animation(Constants.WALK_LOOP_DURATION, walkingRightFrames, PlayMode.LOOP);
+        }
+    }
+
+    public class PlatformAssets {
+
+        public final NinePatch platformNinePatch;
+
+        public PlatformAssets(TextureAtlas atlas) {
+            AtlasRegion region = atlas.findRegion(Constants.PLATFORM_SPRITE);
             int edge = Constants.PLATFORM_EDGE;
             platformNinePatch = new NinePatch(region, edge, edge, edge, edge);
         }
     }
 
-    public class EnemyAssets
-    {
-        public TextureAtlas.AtlasRegion idle;
 
-        public EnemyAssets(TextureAtlas atlas)
-        {
-            this.idle = makeAtlasRegion(atlas.findRegion(Constants.ENEMY_IDLE));
+    public class EnemyAssets {
+
+        public final AtlasRegion enemy;
+
+        public EnemyAssets(TextureAtlas atlas) {
+            enemy = atlas.findRegion(Constants.ENEMY_SPRITE);
         }
     }
 
-    public class GigaGalAssets
-    {
-        // Add an AtlasRegion to hold the standing-right sprite
-        public TextureAtlas.AtlasRegion standingRight;
-        public TextureAtlas.AtlasRegion standingLeft;
-        public TextureAtlas.AtlasRegion jumpingRight;
-        public TextureAtlas.AtlasRegion jumpingLeft;
-        // public TextureAtlas.AtlasRegion walk2Right;
-        // public TextureAtlas.AtlasRegion walk2Left;
+    public class BulletAssets {
+        public final AtlasRegion bullet;
 
-        public Animation walkingRight;
-        public Animation walkingLeft;
-
-        public GigaGalAssets(TextureAtlas atlas)
-        {
-            // Use atlas.findRegion() to initialize the standing right AtlasRegion
-            TextureRegion standingRightRegion = atlas.findRegion(Constants.GIGAGAL_STANDING_RIGHT);
-            standingRight = makeAtlasRegion(standingRightRegion);
-
-            // Use atlas.findRegion() to initialize the standing left AtlasRegion
-            TextureRegion standingLeftRegion = atlas.findRegion(Constants.GIGAGAL_STANDING_LEFT);
-            standingLeft = makeAtlasRegion(standingLeftRegion);
-
-            // Use atlas.findRegion() to initialize the standing right AtlasRegion
-            TextureRegion jumpingRightRegion = atlas.findRegion(Constants.GIGAGAL_JUMPING_RIGHT);
-            jumpingRight = makeAtlasRegion(jumpingRightRegion);
-
-            // Use atlas.findRegion() to initialize the standing left AtlasRegion
-            TextureRegion jumpingLeftRegion = atlas.findRegion(Constants.GIGAGAL_JUMPING_LEFT);
-            jumpingLeft = makeAtlasRegion(jumpingLeftRegion);
-
-            Array<TextureAtlas.AtlasRegion> walkingRightFrames = new Array<TextureAtlas.AtlasRegion>();
-            walkingRightFrames.add(makeAtlasRegion(atlas.findRegion(Constants.GIGAGAL_WALK_1_RIGHT)));
-            walkingRightFrames.add(makeAtlasRegion(atlas.findRegion(Constants.GIGAGAL_WALK_2_RIGHT)));
-            walkingRightFrames.add(makeAtlasRegion(atlas.findRegion(Constants.GIGAGAL_WALK_3_RIGHT)));
-
-            walkingRight = new Animation(
-                    Constants.GIGAGAL_WALK_LOOP_DURATION,
-                    walkingRightFrames,
-                    Animation.PlayMode.LOOP_PINGPONG);
-
-            Array<TextureAtlas.AtlasRegion> walkingLeftFrames = new Array<TextureAtlas.AtlasRegion>();
-            walkingLeftFrames.add(makeAtlasRegion(atlas.findRegion(Constants.GIGAGAL_WALK_1_LEFT)));
-            walkingLeftFrames.add(makeAtlasRegion(atlas.findRegion(Constants.GIGAGAL_WALK_2_LEFT)));
-            walkingLeftFrames.add(makeAtlasRegion(atlas.findRegion(Constants.GIGAGAL_WALK_3_LEFT)));
-
-            walkingLeft = new Animation(
-                    Constants.GIGAGAL_WALK_LOOP_DURATION,
-                    walkingLeftFrames,
-                    Animation.PlayMode.LOOP_PINGPONG);
-
-            /*
-            // Use atlas.findRegion() to initialize the standing right AtlasRegion
-            TextureRegion walk2RightRegion = atlas.findRegion(Constants.GIGAGAL_WALK_2_RIGHT);
-            walk2Right = makeAtlasRegion(walk2RightRegion);
-
-            // Use atlas.findRegion() to initialize the standing left AtlasRegion
-            TextureRegion walk2LeftRegion = atlas.findRegion(Constants.GIGAGAL_WALK_2_LEFT);
-            walk2Left = makeAtlasRegion(walk2LeftRegion);
-            */
+        public BulletAssets(TextureAtlas atlas) {
+            bullet = atlas.findRegion(Constants.BULLET_SPRITE);
         }
-
     }
 
-    public TextureAtlas.AtlasRegion makeAtlasRegion(TextureRegion textureRegion)
-    {
-        return new TextureAtlas.AtlasRegion(
-                textureRegion.getTexture(),
-                textureRegion.getRegionX(),
-                textureRegion.getRegionY(),
-                textureRegion.getRegionWidth(),
-                textureRegion.getRegionHeight()
-        );
+    public class PowerupAssets {
+        public final AtlasRegion powerup;
+
+        public PowerupAssets(TextureAtlas atlas) {
+            powerup = atlas.findRegion(Constants.POWERUP_SPRITE);
+        }
     }
+
+    public class ExplosionAssets {
+        public final Animation explosionAnimation;
+
+        public ExplosionAssets(TextureAtlas atlas){
+            Array<AtlasRegion> explosionFrames = new Array<AtlasRegion>();
+            explosionFrames.add(atlas.findRegion(Constants.EXPLOSION_SPRITE_1));
+            explosionFrames.add(atlas.findRegion(Constants.EXPLOSION_SPRITE_2));
+            explosionFrames.add(atlas.findRegion(Constants.EXPLOSION_SPRITE_3));
+            explosionAnimation = new Animation(Constants.EXPLOSION_FRAME_DURATION, explosionFrames, PlayMode.NORMAL);
+        }
+    }
+
 }

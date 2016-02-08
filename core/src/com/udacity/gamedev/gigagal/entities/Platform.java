@@ -1,40 +1,35 @@
 package com.udacity.gamedev.gigagal.entities;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.udacity.gamedev.gigagal.util.Assets;
 
-/**
- * Created by Quiv on 2015-12-22.
- */
-public class Platform
-{
-    float
-        left,
-        right,
-        top,
-        bottom;
+public class Platform {
 
-    public Platform(float left, float top, float width, float height)
-    {
-        this.left = left;
+    public final float top;
+    public final float bottom;
+    public final float left;
+    public final float right;
+    // This is used by the level loading code to link enemies and platforms.
+    String identifier;
+
+    public Platform(float left, float top, float width, float height) {
         this.top = top;
-        this.right = left + width;
         this.bottom = top - height;
+        this.left = left;
+        this.right = left + width;
     }
 
-    public void render(SpriteBatch batch)
-    {
-        float width = right - left;
-        float height = top - bottom;
+    public void render(SpriteBatch batch) {
+        final float width = right - left;
+        final float height = top - bottom;
+        Assets.instance.platformAssets.platformNinePatch.draw(batch, left - 1, bottom - 1, width + 2, height + 2);
+    }
 
-        Assets.instance.platformAssets.platformNinePatch.draw(
-                batch,
-                left - 1,
-                bottom - 1,
-                width + 2,
-                height + 2
-        );
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 }

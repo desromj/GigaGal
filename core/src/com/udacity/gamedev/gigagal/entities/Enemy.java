@@ -7,81 +7,48 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.udacity.gamedev.gigagal.util.Assets;
 import com.udacity.gamedev.gigagal.util.Constants;
+import com.udacity.gamedev.gigagal.util.Enums.Direction;
+import com.udacity.gamedev.gigagal.util.Utils;
 
-/**
- * Created by Mike on 2016-02-04.
- */
-public class Enemy
-{
-    Platform patrolPlatform;
-    Vector2 position, velocity;
-    PatrolDirection patrolDirection;
 
-    long startTime;
+public class Enemy {
 
-    public Enemy(Platform patrolPlatform)
-    {
-        this.patrolPlatform = patrolPlatform;
-        this.patrolDirection = PatrolDirection.RIGHT;
+    private final Platform platform;
+    public Vector2 position;
+    private Direction direction;
+    final long startTime;
 
-        this.position = new Vector2(
-                patrolPlatform.left,
-                patrolPlatform.top);
-
-        this.velocity = new Vector2(Constants.ENEMY_PATROL_SPEED, 0.0f);
+    public Enemy(Platform platform) {
+        this.platform = platform;
+        direction = Direction.RIGHT;
+        position = new Vector2(platform.left, platform.top + Constants.ENEMY_CENTER.y);
         startTime = TimeUtils.nanoTime();
     }
 
-    public void update(float delta)
-    {
-        this.position.x += velocity.x * delta;
-
-        if (position.x < patrolPlatform.left - getIdleSpriteWidth() / 2.0f) {
-            velocity.x = -velocity.x;
-            this.patrolDirection = PatrolDirection.RIGHT;
-        }
-        if (position.x > patrolPlatform.right - getIdleSpriteWidth() / 2.0f) {
-            velocity.x = -velocity.x;
-            this.patrolDirection = PatrolDirection.LEFT;
+    public void update(float delta) {
+        switch (direction) {
+            case LEFT:
+                position.x -= Constants.ENEMY_MOVEMENT_SPEED * delta;
+                break;
+            case RIGHT:
+                position.x += Constants.ENEMY_MOVEMENT_SPEED * delta;
         }
 
-        float elapsedTime = (TimeUtils.nanoTime() - startTime) * MathUtils.nanoToSec;
-        float bobScale = 1 + MathUtils.sin(MathUtils.PI2 * elapsedTime / Constants.ENEMY_BOB_PERIOD);
-        this.position.y = patrolPlatform.top + Constants.ENEMY_BOB_AMPLITUDE * bobScale;
+        if (position.x < platform.left) {
+            position.x = platform.left;
+            direction = Direction.RIGHT;
+        } else if (position.x > platform.right) {
+            position.x = platform.right;
+            direction = Direction.LEFT;
+        }
+
+        final float elapsedTime = Utils.secondsSince(startTime);
+        final float bobMultiplier = 1 + MathUtils.sin(MathUtils.PI2 * elapsedTime / Constants.ENEMY_BOB_PERIOD);
+        position.y = platform.top + Constants.ENEMY_CENTER.y + Constants.ENEMY_BOB_AMPLITUDE * bobMultiplier;
     }
 
-    public float getIdleSpriteWidth()
-    {
-        return Assets.instance.enemyAssets.idle.getRegionWidth();
-    }
-
-    public void render(SpriteBatch batch)
-    {
-        TextureRegion atlasRegion = Assets.instance.enemyAssets.idle;
-
-        batch.draw(
-                atlasRegion.getTexture(),
-                this.position.x,
-                this.position.y,
-                0,
-                0,
-                atlasRegion.getRegionWidth(),
-                atlasRegion.getRegionHeight(),
-                1,
-                1,
-                0,
-                atlasRegion.getRegionX(),
-                atlasRegion.getRegionY(),
-                atlasRegion.getRegionWidth(),
-                atlasRegion.getRegionHeight(),
-                false,
-                false
-        );
-    }
-
-    public enum PatrolDirection
-    {
-        LEFT,
-        RIGHT
+    public void render(SpriteBatch batch) {
+        final TextureRegion region = Assets.instance.enemyAssets.enemy;
+        Utils.drawTextureRegion(batch, region, position, Constants.ENEMY_CENTER);
     }
 }

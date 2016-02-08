@@ -1,76 +1,102 @@
 package com.udacity.gamedev.gigagal;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.DelayedRemovalArray;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.udacity.gamedev.gigagal.entities.Enemy;
+import com.udacity.gamedev.gigagal.entities.Explosion;
 import com.udacity.gamedev.gigagal.entities.GigaGal;
 import com.udacity.gamedev.gigagal.entities.Platform;
+import com.udacity.gamedev.gigagal.util.Assets;
 import com.udacity.gamedev.gigagal.util.Constants;
+import com.udacity.gamedev.gigagal.util.Utils;
 
-/**
- * Created by Quiv on 2015-12-22.
- */
-public class Level
-{
-    GigaGal gigaGal;
-    Array<Enemy> enemies;
-    Array<Platform> platforms;
-    Vector2 spawnPosition;
+public class Level {
 
-    public Level()
-    {
-        gigaGal = new GigaGal();
-        enemies = new Array<Enemy>();
+    public static final String TAG = Level.class.getName();
 
-        spawnPosition = new Vector2(gigaGal.getPosition().x, gigaGal.getPosition().y);
+    private Viewport viewport;
 
-        platforms = new Array<Platform>();
-        platforms.add(new Platform(10, 30, 80, 20));
-        platforms.add(new Platform(40, 50, 20, 20));
-        platforms.add(new Platform(110, 80, 60, 40));
-        enemies.add(new Enemy(platforms.peek()));
-        platforms.add(new Platform(10, 80, 30, 20));
-        platforms.add(new Platform(-2, -2, 60, 24));
+    private GigaGal gigaGal;
+    private Array<Platform> platforms;
+    private DelayedRemovalArray<Enemy> enemies;
 
-        platforms.add(new Platform(230, 40, 60, 24));
-        enemies.add(new Enemy(platforms.peek()));
-        platforms.add(new Platform(300, 70, 24, 40));
-        platforms.add(new Platform(260, 90, 8, 8));
-        platforms.add(new Platform(280, 120, 8, 8));
-        platforms.add(new Platform(260, 150, 80, 8));
-        enemies.add(new Enemy(platforms.peek()));
-
-        platforms.add(new Platform(400, 60, 120, 24));
-        enemies.add(new Enemy(platforms.peek()));
+    public Level(Viewport viewport) {
+        this.viewport = viewport;
+        initializeDebugLevel();
     }
 
-    public void update(float delta)
-    {
+    public void update(float delta) {
+        // Update GigaGal
         gigaGal.update(delta, platforms);
 
-        for (Enemy enemy: enemies)
-            enemy.update(delta);
 
-        if (gigaGal.getPosition().y < Constants.KILL_PLANE_Y_HEIGHT)
-            gigaGal.setPosition(spawnPosition);
+        // Update Enemies
+        for (int i = 0; i < enemies.size; i++) {
+            Enemy enemy = enemies.get(i);
+            enemy.update(delta);
+        }
     }
 
-    public void render(SpriteBatch batch, ShapeRenderer renderer)
-    {
-        batch.begin();
+    public void render(SpriteBatch batch) {
 
-        for (Platform platform: platforms)
+        for (Platform platform : platforms) {
             platform.render(batch);
+        }
+
+
+        for (Enemy enemy : enemies) {
+            enemy.render(batch);
+        }
 
         gigaGal.render(batch);
-
-        for (Enemy enemy: enemies)
-            enemy.render(batch);
-
-        batch.end();
     }
+
+    private void initializeDebugLevel() {
+
+        gigaGal = new GigaGal(new Vector2(15, 40), this);
+
+        platforms = new Array<Platform>();
+        enemies = new DelayedRemovalArray<Enemy>();
+
+        platforms.add(new Platform(15, 100, 30, 20));
+
+        Platform enemyPlatform = new Platform(75, 90, 100, 65);
+        enemies.add(new Enemy(enemyPlatform));
+
+        platforms.add(enemyPlatform);
+        platforms.add(new Platform(35, 55, 50, 20));
+        platforms.add(new Platform(10, 20, 20, 9));
+
+    }
+
+    public Array<Platform> getPlatforms() {
+        return platforms;
+    }
+
+    public DelayedRemovalArray<Enemy> getEnemies() {
+        return enemies;
+    }
+
+    public Viewport getViewport() {
+        return viewport;
+    }
+
+    public void setViewport(Viewport viewport) {
+        this.viewport = viewport;
+    }
+
+    public GigaGal getGigaGal() {
+        return gigaGal;
+    }
+
+    public void setGigaGal(GigaGal gigaGal) {
+        this.gigaGal = gigaGal;
+    }
+
+
 }
