@@ -33,6 +33,11 @@ public class GigaGal {
     long walkStartTime;
     long jumpStartTime;
 
+    float shotDelay;
+    float cannotShootFor;
+
+    int ammo;
+
     Level level;
 
     public GigaGal(Vector2 spawnLocation, Level level) {
@@ -52,6 +57,10 @@ public class GigaGal {
         jumpState = Enums.JumpState.FALLING;
         facing = Direction.RIGHT;
         walkState = Enums.WalkState.NOT_WALKING;
+
+        cannotShootFor = 0.0f;
+        this.shotDelay = 1.0f / Constants.GIGAGAL_SHOTS_PER_SECOND;
+        this.ammo = Constants.GIGAGAL_STARTING_AMMO;
     }
 
     public Vector2 getPosition() {
@@ -59,6 +68,8 @@ public class GigaGal {
     }
 
     public void update(float delta, Array<Platform> platforms) {
+
+        cannotShootFor -= delta;
 
         lastFramePosition.set(position);
         velocity.y -= Constants.GRAVITY;
@@ -137,6 +148,33 @@ public class GigaGal {
         }
 
 
+    }
+
+    public void shootBullet(Array<Bullet> bullets)
+    {
+        if (this.ammo > 0 && this.cannotShootFor <= 0.0f)
+        {
+            cannotShootFor = shotDelay;
+            ammo--;
+
+            Vector2 spawnVelocity = new Vector2(
+                    (facing == Direction.LEFT) ? -Constants.BULLET_HORIZONTAL_SPEED : Constants.BULLET_HORIZONTAL_SPEED,
+                    0.0f
+            );
+
+            bullets.add(new Bullet(
+                    new Vector2(
+                            this.position.x + ((facing == Direction.LEFT) ? -Constants.GIGAGAL_CANNON_OFFSET.x : Constants.GIGAGAL_CANNON_OFFSET.x),
+                            this.position.y + Constants.GIGAGAL_CANNON_OFFSET.y
+                    ),
+                    spawnVelocity
+            ));
+        }
+    }
+
+    public void addAmmo(Powerup ammoPowerup)
+    {
+        this.ammo += ammoPowerup.getAmmoCount();
     }
 
     boolean landedOnPlatform(Platform platform) {

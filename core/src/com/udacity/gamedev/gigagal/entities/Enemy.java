@@ -18,11 +18,24 @@ public class Enemy {
     private Direction direction;
     final long startTime;
 
+    float hp;
+
     public Enemy(Platform platform) {
         this.platform = platform;
         direction = Direction.RIGHT;
         position = new Vector2(platform.left, platform.top + Constants.ENEMY_CENTER.y);
         startTime = TimeUtils.nanoTime();
+        this.hp = Constants.ENEMY_HEALTH;
+    }
+
+    public void hit(Bullet bullet)
+    {
+        this.hp -= bullet.getShotPower();
+    }
+
+    public boolean isDead()
+    {
+        return this.hp <= 0.0f;
     }
 
     public void update(float delta) {

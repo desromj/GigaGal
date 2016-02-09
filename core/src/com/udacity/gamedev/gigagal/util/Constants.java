@@ -19,9 +19,13 @@ public class Constants {
     public static final Vector2 GIGAGAL_EYE_POSITION = new Vector2(16, 24);
     public static final float GIGAGAL_EYE_HEIGHT = 16.0f;
     public static final float GIGAGAL_STANCE_WIDTH = 21.0f;
-    public static final Vector2 GIGAGAL_CANNON_OFFSET = new Vector2(12, -7);
+    public static final Vector2 GIGAGAL_CANNON_OFFSET = new Vector2(12, -8);
     public static final float GIGAGAL_HEIGHT = 23.0f;
     public static final float GIGAGAL_MOVE_SPEED = 100;
+    public static final float GIGAGAL_SHOTS_PER_SECOND = 3.0f;
+    public static final float GIGAGAL_SHOT_POWER = 5.0f;
+
+    public static final int GIGAGAL_STARTING_AMMO = 20;
 
     public static final float JUMP_SPEED = 200;
     public static final Vector2 KNOCKBACK_VELOCITY = new Vector2(200, 200);
@@ -50,12 +54,17 @@ public class Constants {
     public static final float ENEMY_BOB_AMPLITUDE = 2;
     public static final float ENEMY_BOB_PERIOD = 3.0f;
     public static final float ENEMY_COLLISION_RADIUS = 15;
+    public static final float ENEMY_HEALTH = 25.0f;
 
     // Bullet
     public static final String BULLET_SPRITE = "bullet";
+    public static final float BULLET_HORIZONTAL_SPEED = 180.0f;
+    public static final float BULLET_HIT_RADIUS = 2.0f;
 
     // Powerup
     public static final String POWERUP_SPRITE = "powerup";
+    public static final int POWERUP_AMMO_COUNT = 6;
+    public static final float POWERUP_COLLISION_RADIUS = 4.0f;
 
     // Explosion
     public static final String EXPLOSION_SPRITE_1 = "explosion-small";

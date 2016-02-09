@@ -24,9 +24,14 @@ public class Explosion
         startTime = TimeUtils.nanoTime();
     }
 
-    public void update(float delta)
+    public boolean isOver()
     {
+        float lifeTime = Assets.instance.explosionAssets.explosionAnimation.getAnimationDuration();
 
+        if (((TimeUtils.nanoTime() - this.startTime) * MathUtils.nanoToSec) > lifeTime)
+            return true;
+
+        return false;
     }
 
     public void render(SpriteBatch batch)

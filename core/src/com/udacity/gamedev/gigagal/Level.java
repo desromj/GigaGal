@@ -7,10 +7,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.DelayedRemovalArray;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.udacity.gamedev.gigagal.entities.Bullet;
 import com.udacity.gamedev.gigagal.entities.Enemy;
 import com.udacity.gamedev.gigagal.entities.Explosion;
 import com.udacity.gamedev.gigagal.entities.GigaGal;
 import com.udacity.gamedev.gigagal.entities.Platform;
+import com.udacity.gamedev.gigagal.entities.Powerup;
 import com.udacity.gamedev.gigagal.util.Assets;
 import com.udacity.gamedev.gigagal.util.Constants;
 import com.udacity.gamedev.gigagal.util.Utils;
@@ -23,7 +25,11 @@ public class Level {
 
     private GigaGal gigaGal;
     private Array<Platform> platforms;
+
     private DelayedRemovalArray<Enemy> enemies;
+    private DelayedRemovalArray<Bullet> bullets;
+    private DelayedRemovalArray<Explosion> explosions;
+    private DelayedRemovalArray<Powerup> powerups;
 
     public Level(Viewport viewport) {
         this.viewport = viewport;
@@ -40,6 +46,92 @@ public class Level {
             Enemy enemy = enemies.get(i);
             enemy.update(delta);
         }
+
+        // Update Bullets
+        for (int i = 0; i < bullets.size; i++) {
+            bullets.get(i).update(delta);
+        }
+
+        // Update Explosions, and remove if necessary
+        for (int i = 0; i < explosions.size; i++)
+        {
+            if (explosions.get(i).isOver())
+                explosions.removeIndex(i);
+        }
+
+        // Timing is handled in the gigagal class
+        if (Gdx.input.isKeyPressed(Input.Keys.X)) {
+            gigaGal.shootBullet(bullets);
+        }
+
+        // Handle bullets offscreen
+        removeBullets();
+        checkBulletEnemyCollision();
+        checkPowerupPickup();
+    }
+
+    private void checkPowerupPickup()
+    {
+        float collisionDist = Constants.POWERUP_COLLISION_RADIUS + Constants.GIGAGAL_STANCE_WIDTH;
+        Vector2 ggPos = gigaGal.getPosition();
+
+        for (int i = 0; i < powerups.size; i++)
+        {
+            Vector2 puPos = powerups.get(i).getPosition();
+
+            if (Vector2.dst(ggPos.x, ggPos.y, puPos.x, puPos.y) < collisionDist)
+            {
+                gigaGal.addAmmo(powerups.get(i));
+                powerups.removeIndex(i);
+            }
+        }
+    }
+
+    private void checkBulletEnemyCollision()
+    {
+        float collisionDist = Constants.ENEMY_COLLISION_RADIUS + Constants.BULLET_HIT_RADIUS;
+
+        for (int b = 0; b < bullets.size; b++)
+        {
+            Bullet bullet = bullets.get(b);
+            Vector2 bulletPos = bullet.getPosition();
+
+            for (int e = 0; e < enemies.size; e++)
+            {
+                Enemy enemy = enemies.get(e);
+
+                if (Vector2.dst(enemy.position.x, enemy.position.y, bulletPos.x, bulletPos.y) < collisionDist)
+                {
+                    enemy.hit(bullet);
+                    spawnExplosion(bulletPos);
+
+                    bullets.removeIndex(b);
+
+                    if (enemy.isDead()) {
+                        spawnExplosion(enemy.position);
+                        enemies.removeIndex(e);
+                    }
+                }
+            }
+        }
+    }
+
+    private void removeBullets()
+    {
+        for (int i = 0; i < bullets.size; i++)
+        {
+            Bullet bullet = bullets.get(i);
+
+            if (Math.abs(bullet.getPosition().x - gigaGal.getPosition().x) > viewport.getWorldWidth() / 2.0f + Constants.GIGAGAL_STANCE_WIDTH)
+            {
+                bullets.removeIndex(i);
+            }
+        }
+    }
+
+    public void spawnExplosion(Vector2 position)
+    {
+        explosions.add(new Explosion(position));
     }
 
     public void render(SpriteBatch batch) {
@@ -48,9 +140,20 @@ public class Level {
             platform.render(batch);
         }
 
-
         for (Enemy enemy : enemies) {
             enemy.render(batch);
+        }
+
+        for (Bullet bullet: bullets) {
+            bullet.render(batch);
+        }
+
+        for (Explosion explosion: explosions) {
+            explosion.render(batch);
+        }
+
+        for (Powerup powerup: powerups) {
+            powerup.render(batch);
         }
 
         gigaGal.render(batch);
@@ -72,6 +175,11 @@ public class Level {
         platforms.add(new Platform(35, 55, 50, 20));
         platforms.add(new Platform(10, 20, 20, 9));
 
+        bullets = new DelayedRemovalArray<Bullet>();
+        explosions = new DelayedRemovalArray<Explosion>();
+        powerups = new DelayedRemovalArray<Powerup>();
+
+        powerups.add(new Powerup(new Vector2(20, 100)));
     }
 
     public Array<Platform> getPlatforms() {
