@@ -39,8 +39,9 @@ public class LevelLoader
             levelJson = (JSONObject) parser.parse(Gdx.files.internal(levelPath).readString());
 
             // Load images and 9patchs from the JSON file
-            JSONArray nonPlatforms = (JSONArray) ((JSONObject)levelJson.get("composite")).get("sImages");
-            JSONArray platforms = (JSONArray) ((JSONObject)levelJson.get("composite")).get("sImage9patchs");
+            JSONObject comp = Utils.castJSON(levelJson, "composite");
+            JSONArray nonPlatforms = Utils.castJSON(comp, "sImages");
+            JSONArray platforms = Utils.castJSON(comp, "sImage9patchs");
 
             // Load platforms and enemies first - enemies depend on them
             loadPlatforms(platforms, level);
@@ -98,18 +99,23 @@ public class LevelLoader
         {
             final JSONObject platformObj = (JSONObject) plat;
 
-            final float x = ((Number) platformObj.get("x")).floatValue();
-            final float y = ((Number) platformObj.get("y")).floatValue();
-            final float width = ((Number) platformObj.get("width")).floatValue();
-            final float height = ((Number) platformObj.get("height")).floatValue();
+            final Number x = Utils.castJSON(platformObj, "x");
+            final Number y = Utils.castJSON(platformObj, "y");
+            final Number width = Utils.castJSON(platformObj, "width");
+            final Number height = Utils.castJSON(platformObj, "height");
 
-            final Platform platform = new Platform(x, y + height, width, height);
+            final Platform platform = new Platform(
+                    x.floatValue(),
+                    y.floatValue() + height.floatValue(),
+                    width.floatValue(),
+                    height.floatValue());
+
             result.add(platform);
 
             Gdx.app.log(TAG, "Added a platform at x = " + x);
 
             // Add enemy to the platform, if necessary
-            final String identifier = (String) platformObj.get("itemIdentifier");
+            final String identifier = Utils.castJSON(platformObj, "itemIdentifier");
 
             if (identifier != null && identifier.equals("Enemy"))
             {

@@ -38,6 +38,11 @@ public class Utils {
         return MathUtils.nanoToSec * (TimeUtils.nanoTime() - timeNanos);
     }
 
+    public static <T extends Object> T castJSON(JSONObject o, String key)
+    {
+        return (T) o.get(key);
+    }
+
     public static Vector2 getJSONObjectXYVector(JSONObject object)
     {
         float x = 0.0f, y = 0.0f;

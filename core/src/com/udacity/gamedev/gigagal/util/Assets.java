@@ -135,10 +135,19 @@ public class Assets implements Disposable, AssetErrorListener {
     }
 
     public class ExitPortalAssets {
-        public final AtlasRegion portal;
+        public final Animation portalAnimation;
 
         public ExitPortalAssets(TextureAtlas atlas) {
-            portal = atlas.findRegion(Constants.EXIT_PORTAL_SPRITE);
+            Array<AtlasRegion> portalFrames = new Array<AtlasRegion>();
+
+            portalFrames.add(atlas.findRegion(Constants.EXIT_PORTAL_SPRITE_1));
+            portalFrames.add(atlas.findRegion(Constants.EXIT_PORTAL_SPRITE_2));
+            portalFrames.add(atlas.findRegion(Constants.EXIT_PORTAL_SPRITE_3));
+            portalFrames.add(atlas.findRegion(Constants.EXIT_PORTAL_SPRITE_4));
+            portalFrames.add(atlas.findRegion(Constants.EXIT_PORTAL_SPRITE_5));
+            portalFrames.add(atlas.findRegion(Constants.EXIT_PORTAL_SPRITE_6));
+
+            portalAnimation = new Animation(Constants.EXIT_PORTAL_FRAME_DURATION, portalFrames, PlayMode.LOOP);
         }
     }
 
