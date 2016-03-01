@@ -24,6 +24,7 @@ public class Assets implements Disposable, AssetErrorListener {
     public BulletAssets bulletAssets;
     public PowerupAssets powerupAssets;
     public ExplosionAssets explosionAssets;
+    public ExitPortalAssets exitPortalAssets;
 
     private AssetManager assetManager;
 
@@ -45,6 +46,7 @@ public class Assets implements Disposable, AssetErrorListener {
         bulletAssets = new BulletAssets(atlas);
         powerupAssets = new PowerupAssets(atlas);
         explosionAssets = new ExplosionAssets(atlas);
+        exitPortalAssets = new ExitPortalAssets(atlas);
     }
 
     @Override
@@ -129,6 +131,14 @@ public class Assets implements Disposable, AssetErrorListener {
 
         public PowerupAssets(TextureAtlas atlas) {
             powerup = atlas.findRegion(Constants.POWERUP_SPRITE);
+        }
+    }
+
+    public class ExitPortalAssets {
+        public final AtlasRegion portal;
+
+        public ExitPortalAssets(TextureAtlas atlas) {
+            portal = atlas.findRegion(Constants.EXIT_PORTAL_SPRITE);
         }
     }
 

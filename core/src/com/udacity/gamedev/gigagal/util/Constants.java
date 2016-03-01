@@ -47,6 +47,9 @@ public class Constants {
     public static final String PLATFORM_SPRITE = "platform";
     public static final int PLATFORM_EDGE = 8;
 
+    // Exit Portal
+    public static final String EXIT_PORTAL_SPRITE = "exit-portal";
+
     // Enemy
     public static final String ENEMY_SPRITE = "enemy";
     public static final Vector2 ENEMY_CENTER = new Vector2(14, 22);

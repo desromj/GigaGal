@@ -1,6 +1,6 @@
 
 gigagal.pack.png
-size: 512,64
+size: 256,128
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -11,6 +11,13 @@ bullet
   orig: 7, 5
   offset: 0, 0
   index: -1
+button
+  rotate: false
+  xy: 2, 62
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 enemy
   rotate: false
   xy: 62, 16
@@ -18,16 +25,23 @@ enemy
   orig: 29, 44
   offset: 0, 0
   index: -1
+exit-portal
+  rotate: false
+  xy: 68, 62
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 explosion-large
   rotate: false
-  xy: 402, 43
+  xy: 231, 109
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
 explosion-medium
   rotate: false
-  xy: 402, 28
+  xy: 231, 94
   size: 13, 13
   orig: 13, 13
   offset: 0, 0
@@ -41,14 +55,14 @@ explosion-small
   index: -1
 jumping-left
   rotate: false
-  xy: 255, 25
+  xy: 166, 54
   size: 29, 35
   orig: 29, 35
   offset: 0, 0
   index: -1
 jumping-right
   rotate: false
-  xy: 159, 25
+  xy: 167, 91
   size: 30, 35
   orig: 30, 35
   offset: 0, 0
@@ -62,63 +76,63 @@ platform
   index: -1
 powerup
   rotate: false
-  xy: 421, 43
+  xy: 183, 35
   size: 15, 17
   orig: 15, 17
   offset: 0, 0
   index: -1
 standing-left
   rotate: false
-  xy: 286, 25
+  xy: 197, 54
   size: 28, 35
   orig: 28, 35
   offset: 0, 0
   index: -1
 standing-right
   rotate: false
-  xy: 93, 25
+  xy: 134, 91
   size: 31, 35
   orig: 31, 35
   offset: 0, 0
   index: -1
 walk-1-left
   rotate: false
-  xy: 346, 25
+  xy: 227, 54
   size: 27, 35
   orig: 27, 35
   offset: 0, 0
   index: -1
 walk-1-right
   rotate: false
-  xy: 191, 25
+  xy: 199, 91
   size: 30, 35
   orig: 30, 35
   offset: 0, 0
   index: -1
 walk-2-left
   rotate: false
-  xy: 375, 25
+  xy: 156, 17
   size: 25, 35
   orig: 25, 35
   offset: 0, 0
   index: -1
 walk-2-right
   rotate: false
-  xy: 223, 25
+  xy: 134, 54
   size: 30, 35
   orig: 30, 35
   offset: 0, 0
   index: -1
 walk-3-left
   rotate: false
-  xy: 316, 25
+  xy: 126, 17
   size: 28, 35
   orig: 28, 35
   offset: 0, 0
   index: -1
 walk-3-right
   rotate: false
-  xy: 126, 25
+  xy: 93, 25
   size: 31, 35
   orig: 31, 35
   offset: 0, 0
