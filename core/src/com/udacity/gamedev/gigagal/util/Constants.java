@@ -31,6 +31,13 @@ public class Constants {
     public static final Vector2 KNOCKBACK_VELOCITY = new Vector2(200, 200);
     public static final float MAX_JUMP_DURATION = .1f;
 
+    // JSON Tags
+    public static final String EXIT_PORTAL_JSON_TAG = "exit-portal";
+    public static final String ENEMY_JSON_TAG = "Enemy";
+    public static final String POWERUP_JSON_TAG= "powerup";
+    public static final String GIGAGAL_JSON_TAG = "walk-1-right";
+
+    // GigaGal Sprites
     public static final String STANDING_RIGHT = "standing-right";
     public static final String STANDING_LEFT = "standing-left";
     public static final String JUMPING_RIGHT = "jumping-right";
@@ -48,8 +55,6 @@ public class Constants {
     public static final int PLATFORM_EDGE = 8;
 
     // Exit Portal
-    public static final String EXIT_PORTAL_SPRITE = "exit-portal";
-
     public static final String EXIT_PORTAL_SPRITE_1 = "exit-portal-1";
     public static final String EXIT_PORTAL_SPRITE_2 = "exit-portal-2";
     public static final String EXIT_PORTAL_SPRITE_3 = "exit-portal-3";

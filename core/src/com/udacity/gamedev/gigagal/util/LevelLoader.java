@@ -65,14 +65,14 @@ public class LevelLoader
             Vector2 itemXYPos = Utils.getJSONObjectXYVector(item);
 
             // Add powerups
-            if (item.get("imageName").equals("powerup"))
+            if (item.get("imageName").equals(Constants.POWERUP_JSON_TAG))
             {
                 level.getPowerups().add(new Powerup(itemXYPos));
                 continue;
             }
 
             // Add exit portal
-            if (item.get("imageName").equals("exit-portal"))
+            if (item.get("imageName").equals(Constants.EXIT_PORTAL_JSON_TAG))
             {
                 ExitPortal portal = new ExitPortal(itemXYPos);
                 level.setExitPortal(portal);
@@ -80,7 +80,7 @@ public class LevelLoader
             }
 
             // Add GigaGal
-            if (item.get("imageName").equals("walk-1-right"))
+            if (item.get("imageName").equals(Constants.GIGAGAL_JSON_TAG))
             {
                 // Extra height so GigaGal falls onto first platform
                 itemXYPos.y += Constants.GIGAGAL_HEIGHT;
@@ -117,7 +117,7 @@ public class LevelLoader
             // Add enemy to the platform, if necessary
             final String identifier = Utils.castJSON(platformObj, "itemIdentifier");
 
-            if (identifier != null && identifier.equals("Enemy"))
+            if (identifier != null && identifier.equals(Constants.ENEMY_JSON_TAG))
             {
                 final Enemy enemy = new Enemy(platform);
                 level.addEnemy(enemy);
