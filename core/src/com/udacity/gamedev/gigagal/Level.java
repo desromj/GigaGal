@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.DelayedRemovalArray;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.udacity.gamedev.gigagal.entities.Bullet;
 import com.udacity.gamedev.gigagal.entities.Enemy;
+import com.udacity.gamedev.gigagal.entities.ExitPortal;
 import com.udacity.gamedev.gigagal.entities.Explosion;
 import com.udacity.gamedev.gigagal.entities.GigaGal;
 import com.udacity.gamedev.gigagal.entities.Platform;
@@ -24,6 +25,7 @@ public class Level {
     private Viewport viewport;
 
     private GigaGal gigaGal;
+    private ExitPortal exitPortal;
     private Array<Platform> platforms;
 
     private DelayedRemovalArray<Enemy> enemies;
@@ -166,6 +168,7 @@ public class Level {
             powerup.render(batch);
         }
 
+        exitPortal.render(batch);
         gigaGal.render(batch);
     }
 
@@ -226,6 +229,13 @@ public class Level {
         this.gigaGal = gigaGal;
     }
 
+    public ExitPortal getExitPortal() {
+        return exitPortal;
+    }
+
+    public void setExitPortal(ExitPortal exitPortal) {
+        this.exitPortal = exitPortal;
+    }
 
     public void setPlatforms(Array<Platform> platforms) {
         this.platforms = platforms;

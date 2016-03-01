@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.udacity.gamedev.gigagal.Level;
 import com.udacity.gamedev.gigagal.entities.Enemy;
+import com.udacity.gamedev.gigagal.entities.ExitPortal;
 import com.udacity.gamedev.gigagal.entities.GigaGal;
 import com.udacity.gamedev.gigagal.entities.Platform;
 import com.udacity.gamedev.gigagal.entities.Powerup;
@@ -69,13 +70,13 @@ public class LevelLoader
                 continue;
             }
 
-            /*
             // Add exit portal
             if (item.get("imageName").equals("exit-portal"))
             {
-                ExitPortal portal = new
+                ExitPortal portal = new ExitPortal(itemXYPos);
+                level.setExitPortal(portal);
+                continue;
             }
-            */
 
             // Add GigaGal
             if (item.get("imageName").equals("walk-1-right"))
@@ -84,6 +85,7 @@ public class LevelLoader
                 itemXYPos.y += Constants.GIGAGAL_HEIGHT;
                 GigaGal gigaGal = new GigaGal(itemXYPos, level);
                 level.setGigaGal(gigaGal);
+                continue;
             }
         }
     }
