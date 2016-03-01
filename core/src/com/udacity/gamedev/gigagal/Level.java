@@ -33,7 +33,17 @@ public class Level {
 
     public Level(Viewport viewport) {
         this.viewport = viewport;
-        initializeDebugLevel();
+        // initializeDebugLevel();
+        init();
+    }
+
+    public void init()
+    {
+        platforms = new Array<Platform>();
+        enemies = new DelayedRemovalArray<Enemy>();
+        bullets = new DelayedRemovalArray<Bullet>();
+        explosions = new DelayedRemovalArray<Explosion>();
+        powerups = new DelayedRemovalArray<Powerup>();
     }
 
     public void update(float delta) {
@@ -182,6 +192,16 @@ public class Level {
         powerups.add(new Powerup(new Vector2(20, 100)));
     }
 
+    public void addPlatform(Platform platform)
+    {
+        this.platforms.add(platform);
+    }
+
+    public void addEnemy(Enemy enemy)
+    {
+        this.enemies.add(enemy);
+    }
+
     public Array<Platform> getPlatforms() {
         return platforms;
     }
@@ -207,4 +227,35 @@ public class Level {
     }
 
 
+    public void setPlatforms(Array<Platform> platforms) {
+        this.platforms = platforms;
+    }
+
+    public void setEnemies(DelayedRemovalArray<Enemy> enemies) {
+        this.enemies = enemies;
+    }
+
+    public DelayedRemovalArray<Bullet> getBullets() {
+        return bullets;
+    }
+
+    public void setBullets(DelayedRemovalArray<Bullet> bullets) {
+        this.bullets = bullets;
+    }
+
+    public DelayedRemovalArray<Explosion> getExplosions() {
+        return explosions;
+    }
+
+    public void setExplosions(DelayedRemovalArray<Explosion> explosions) {
+        this.explosions = explosions;
+    }
+
+    public DelayedRemovalArray<Powerup> getPowerups() {
+        return powerups;
+    }
+
+    public void setPowerups(DelayedRemovalArray<Powerup> powerups) {
+        this.powerups = powerups;
+    }
 }
